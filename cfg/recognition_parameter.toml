@@ -1,0 +1,25 @@
+####################################
+###  パラメータ設定ファイル            ###
+####################################
+
+### カメラ設定
+[Camera]
+###Pico Monstar
+# カメラ画像の横サイズ
+#image_width = 352 # int
+# カメラ画像の縦サイズ
+#image_height = 287 # int
+#capture_fps = 30 # int
+#sensor_id="0006-3904-0016-1711"
+
+###Pico Zense
+# カメラ画像の横サイズ
+image_width = 640 # int
+# カメラ画像の縦サイズ
+image_height = 360 # int
+# カメラの据え付け角度 [deg]
+theta_pitch = 30.0 # float
+# キャプチャーの速さ [fps]
+capture_fps = 30 # int
+sensor_type = "TOF"
+sensor_id = "zense"
