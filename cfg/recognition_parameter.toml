@@ -16,10 +16,11 @@
 # カメラ画像の横サイズ
 image_width = 640 # int
 # カメラ画像の縦サイズ
-image_height = 360 # int
+#image_height = 360 # int
+image_height = 480 # int
 # カメラの据え付け角度 [deg]
 theta_pitch = 30.0 # float
 # キャプチャーの速さ [fps]
 capture_fps = 30 # int
 sensor_type = "TOF"
-sensor_id = "zense"
+sensor_id = "PD7110CGC8210717W"

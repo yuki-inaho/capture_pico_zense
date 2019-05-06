@@ -26,7 +26,10 @@ void PicoZenseSensor::initialize(int32_t deviceIndex,  int _image_width, int _im
     cout << "Get device count: " << deviceCount << endl;
 
     //Set the Depth Range to Near through PsSetDepthRange interface
-    status = PsSetDepthRange(deviceIndex, PsNearRange);
+
+    //status = PsSetDepthRange(deviceIndex, PsNearRange);
+    status = PsSetDepthRange(deviceIndex, PsMidRange);
+    //status = PsSetDepthRange(deviceIndex, PsXNearRange);
     if (status != PsReturnStatus::PsRetOK)
         cout << "PsSetDepthRange failed!" << endl;
     else
@@ -40,6 +43,16 @@ void PicoZenseSensor::initialize(int32_t deviceIndex,  int _image_width, int _im
         return;
     }
 
+    int32_t serial_len = 100;
+    char serial_buff[serial_len];
+    status = PsGetProperty(deviceIndex, PsPropertySN_Str, serial_buff, &serial_len);
+    serial_number = serial_buff;
+
+    int32_t firm_len = 100;
+    char firm_buff[firm_len];
+    status = PsGetProperty(deviceIndex, PsPropertyFWVer_Str, firm_buff, &firm_len);
+    name = firm_buff;
+
     //Set PixelFormat as PsPixelFormatBGR888 for opencv display
     PsSetColorPixelFormat(deviceIndex, PsPixelFormatBGR888);
 
@@ -48,8 +61,8 @@ void PicoZenseSensor::initialize(int32_t deviceIndex,  int _image_width, int _im
 
     /// Mode
 //    int32_t dataMode = PsDepthAndRGB_30;
-    int32_t dataMode = PsDepthAndIRAndRGB_30;
-//    int32_t dataMode = PsDepthAndIR_15_RGB_30;
+//    int32_t dataMode = PsDepthAndIRAndRGB_30;
+    int32_t dataMode = PsDepthAndIR_15_RGB_30;
     PsSetDataMode(deviceIndex, (PsDataMode)dataMode);
 
     /// distortion
@@ -135,8 +148,17 @@ PicoZenseSensor::update(int32_t deviceIndex) {
     PsFrame irFrame = {0};
     PsGetFrame(deviceIndex, PsIRFrame, &irFrame);
     if (irFrame.pFrameData != NULL) {
-        cv::Mat _ir_img = cv::Mat(irFrame.height, irFrame.width, CV_16UC1, irFrame.pFrameData);
-        _ir_img.convertTo(ir_img, CV_8U, 255.0 / 3840);
+        //cv::Mat _ir_img = cv::Mat(irFrame.height, irFrame.width, CV_16UC1, irFrame.pFrameData);
+        ir_img = cv::Mat(irFrame.height, irFrame.width, CV_16UC1, irFrame.pFrameData);
+        //_ir_img.convertTo(ir_img, CV_8U, 255.0 / 3840);
+        //cv::Mat ir_img = cv::Mat(irFrame.height, irFrame.width, CV_16UC1, irFrame.pFrameData);
+    }
+
+    PsFrame confFrame = {0};
+    PsGetFrame(deviceIndex, PsConfidenceFrame, &confFrame);
+    if (confFrame.pFrameData != NULL) {
+        //cv::Mat _ir_img = cv::Mat(irFrame.height, irFrame.width, CV_16UC1, irFrame.pFrameData);
+        cv::Mat conf = cv::Mat(confFrame.height, confFrame.width, CV_16UC1, confFrame.pFrameData);
     }
 
 }

@@ -13,6 +13,6 @@ public:
 
 private:
 
-    int n_sensor;
+    int32_t n_sensor;
     std::vector<PicoZenseSensor> pico_zense_sensor_list;
 };

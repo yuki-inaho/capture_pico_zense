@@ -20,9 +20,9 @@
 using namespace std;
 using namespace cv;
 
-std::string HOME_PATH = std::getenv("HOME");
-std::string CFG_PARAM_PATH = HOME_PATH + "/work/cpp/capture_zense/cfg/recognition_parameter.toml";
-
+//std::string HOME_PATH = std::getenv("HOME");
+//std::string CFG_PARAM_PATH = HOME_PATH + "/work/cpp/capture_zense/cfg/recognition_parameter.toml";
+std::string CFG_PARAM_PATH = "../cfg/recognition_parameter.toml";
 
 // One (and only one) of your C++ files must define CVUI_IMPLEMENTATION
 // before the inclusion of cvui.h to ensure its implementaiton is compiled.
@@ -129,7 +129,6 @@ void CaptureImageMode(){
     while (true) {
         frame = cv::Scalar(49, 52, 49);
         sens_mng.update();
-
         
         cv::Mat color, ir_left,  depth, depth_color;
         color = sens_mng.getRGBImage().clone();
@@ -145,17 +144,19 @@ void CaptureImageMode(){
         cv::resize(color, color_r, cv::Size(image_width, image_height));
         cv::resize(depth_color, depth_color_r, cv::Size(image_width, image_height));
 
-        cv::cvtColor(ir_left,ir_left,cv::COLOR_GRAY2RGB);
+//        cv::cvtColor(ir_left,ir_left,cv::COLOR_GRAY2RGB);
 
         cvui::image(frame, 0, 0, color_r);
         cvui::image(frame, image_width, 0, depth_color_r);
 
         /// pcd data
         pcl::PointCloud<pcl::PointXYZ>::Ptr point(new pcl::PointCloud<pcl::PointXYZ>);
+
+        
         point = Depth2Point(depth, camera_param);
 
         ///　1枚撮影(Button)
-        if (cvui::button(frame, 50, 400, 300, 100,  "Capture RGB/Depth Image")) {
+        if (cvui::button(frame, 50, window_height - 300, 300, 100,  "Capture RGB/Depth Image")) {
 
             std::ostringstream oss;
             oss << std::setw(4) << std::setfill('0') << file_count;
@@ -163,15 +164,17 @@ void CaptureImageMode(){
 
             string color_name = "../capture_tmp/color_" + num_str + ".jpg";
             string depth_name = "../capture_tmp/depth_" + num_str + ".png";
+            string ir_name = "../capture_tmp/ir_" + num_str + ".png";
             string depth_color_name = "../capture_tmp/depth_color_" + num_str + ".jpg";
             string pcd_name = "../capture_tmp/point_" + num_str + ".pcd";
 
             cv::imwrite(color_name, color);
 
             Mat depth_write;
-            depth.convertTo(depth_write, CV_8UC4, 1.0/1.0);
+ //           depth.convertTo(depth_write, CV_8UC4, 1.0/1.0);
 //            cv::Mat depth_write = Mat(depth.rows, depth.cols, CV_8UC4, depth.data);
-            cv::imwrite(depth_name, depth_write);
+            cv::imwrite(depth_name, depth);
+            cv::imwrite(ir_name, ir_left);
             cv::imwrite(depth_color_name, depth_color);
 
             pcl::io::savePCDFileBinary(pcd_name, *point);
@@ -181,7 +184,7 @@ void CaptureImageMode(){
         }
 
         /// 撮影枚数表示
-        cvui::printf(frame, 400, 400, 0.5, 0x00ff00, "image_num = %.4d", file_count);
+        cvui::printf(frame, 400, window_height - 200, 0.5, 0x00ff00, "image_num = %.4d", file_count);
 
         /// text display
         cvui::text(frame, 50, window_height - 100, "Press [ESC] key -> Exit", 0.5);

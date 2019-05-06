@@ -17,7 +17,7 @@ SensorManager::setSensors(std::vector<SensorWrapper> &_sensor_vec)
 
 void 
 SensorManager::activateSensor(std::string _serial_number){
-    cout << "test" << " " << _serial_number << endl;
+    cout << "acitivate:" << " " << _serial_number << endl;
     int sensor_idx = bm_idx2serial.right.at(_serial_number);
     present_serial = _serial_number;
     
