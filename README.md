@@ -34,30 +34,26 @@
     https://www.picozense.com/en/sdk.html
     
   2. 入手したSDKを解凍する
-   
-    ```
+
     tar xvf PicoZenseSDK_Ubuntu16.04_20190316_v2.3.9.2_DCAM710.tar.bz2 
     mkdir -p ~/tmp/
     mv -T PicoZenseSDK_Ubuntu16.04_20190316_v2.3.9.2_DCAM710 ~/tmp/PicoZenseSDK
-    ```
+
 
   3. install.shを実行する
 
-    ```
     cd ~/tmp/PicoZenseSDK
     sudo ./install.sh
-    ```
+
 
   4. サンプルコードを実行し、正常にDCAM710が起動するか確認する(DCAM710は起動に20秒ほどかかる)
 
-    ```
     ~/tmp/PicoZenseSDK/Tools/x64/FrameViewer
-    ```
+
 
   5.  pkg-config用ファイルを作成する(prefixはSDKのインストール先のパスに書き換える)
       以下をコピー＆ペーストし、/usr/lib/pkgconfig/libpicozense.pcとして保存する
 
-    ```
     prefix=/home/inaho-00/tmp/PicoZenseSDK
     exec_prefix=${prefix}
     includedir=${prefix}/Include
@@ -67,11 +63,10 @@
     Version: 1.0.0
     Cflags: -I${includedir}/
     Libs: -L${libdir} -lpicozense_api
-    ```
+
 
   6. ソフトウェアをビルドし実行する(ビルドが正常に行われるかどうかを確認する)
 
-    ```
     cd ~/tmp
     git clone https://github.com/teaminaho/capture_zense.git
     cd capture_zense
@@ -80,4 +75,3 @@
     cmake ..
     make -j4
     ./capture_pico_zense
-    ```
